@@ -1,24 +1,35 @@
 import "react-native-gesture-handler";
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import {SafeAreaView, ScrollView, StyleSheet, Text, View, Image,StatusBar  } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { TextInput } from "react-native-paper";
 import Login from "./views/Login.js";
 import Signup from "./views/signUp.js";
 import Home from "./views/Home.js";
 import Create from "./views/CreateNote.js";
+import Update from "./views/Update.js"
 import axios from "react-native-axios";
 // import NavigationBar from 'react-native-navbar';
 export default function App() {
   const [view, setView] = useState("Login");
+  const [note, setNote] = useState(null);
   const [data, setData] = useState([]);
+
 
   const [user, setUser] = useState(null);
   var component;
-const url="192.168.1.197"
+var url="192.168.22.137"
+// require module
+// var NetworkInfo = require('react-native-network-info');
+
+// // Get Local IP
+// NetworkInfo.getIPAddress(ip => {
+//   console.log(ip);
+// });
   useEffect(() => {
+    console.log('user',user)
     axios
-    .get(`http://${url}:3000/note/${user.id}`)
+    .get(`http://${url}:3000/note`)
     .then(({ data }) => {
       setData(data);
     })
@@ -26,8 +37,10 @@ const url="192.168.1.197"
       console.log(err);
     });
   }, []);
-  const changeView = (view) => {
+
+  const changeView = (view,note) => {
     setView(view);
+    setNote(note);
   };
   if (view === "Login") {
     component = (
@@ -55,8 +68,9 @@ const url="192.168.1.197"
       <Home
       url={url}
         data={data}
-        changeView={(view) => {
-          changeView(view);
+        setNote={setNote}
+        changeView={(view,note) => {
+          changeView(view,note);
         }}
       />
     );
@@ -72,8 +86,26 @@ const url="192.168.1.197"
       />
     );
   }
-
+  if (view === "update") {
+    component = (
+      <Update
+      setData={setData}
+      allNotes={data}
+      note={note}
+      url={url}
+        user={user}
+        changeView={(view) => {
+          changeView(view);
+        }}
+      />
+    );
+  }
+  if(data===[]){
+    component=(<View style={styles.container}><Text onPress={()=>changeView("create")}>You Don't have notes please create</Text></View>)
+  }
   return (
+    <SafeAreaView style={styles.cont}>
+    <ScrollView style={styles.scrollView}>
     <NavigationContainer>
  
       {component}
@@ -86,6 +118,8 @@ const url="192.168.1.197"
      style={{height:100, width:200}} 
     /></View> */}
     </NavigationContainer>
+    </ScrollView>
+    </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
@@ -94,6 +128,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  cont: {
+    flex: 1,
+    paddingTop: StatusBar.currentHeight,
+  },
+  scrollView: {
+    backgroundColor: 'white',
+    marginHorizontal: 20,
+  },
+  text: {
+    fontSize: 42,
   },
 });
 const style = {

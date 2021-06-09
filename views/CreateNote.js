@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 import NavigationBar from "react-native-navbar";
 import { TextInput } from "react-native-paper";
 import { Button } from "react-native-paper";
+import Textarea from 'react-native-textarea';
 import axios from 'react-native-axios'
 const styles = {
   container: {
@@ -13,7 +14,18 @@ const styles = {
   Create:{
       flex:1,
       
-  }
+  },
+  textareaContainer: {
+    height: 180,
+    padding: 5,
+    backgroundColor: '#F5FCFF',
+  },
+  textarea: {
+    textAlignVertical: 'top',  // hack android
+    height: 170,
+    fontSize: 14,
+    color: '#333',
+  },
 };
 
 const rightButtonConfig = {
@@ -32,7 +44,7 @@ function Create({changeView, user ,url }) {
   const [note, setnote] = useState("");
   const [error, setError] = useState(null);
   var userId = user.id
-    const getUser = () => {
+    const addPtoduct = () => {
         axios.post(`http://${url}:3000/note`,{image, note , userId}).then(({data})=>{
             console.log('hello',data)
                 
@@ -52,19 +64,22 @@ function Create({changeView, user ,url }) {
         style={{ height: 70, width: 400 }}
         onChangeText={setimage}
       />
-      <TextInput
-        label="Write your note here ......."
-        style={{ height: 150, width: 400 }}
-        onChangeText={setnote}
-      />
-
-      <Button mode="contained" onPress={()=>getUser(username)}>
-        Submit
+     
+       <Textarea
+    containerStyle={styles.textareaContainer}
+    style={styles.textarea}
+    onChangeText={setnote}
+    maxLength={120}
+    placeholder={'Write your note here .......'}
+    placeholderTextColor={'#c7c7c7'}
+    underlineColorAndroid={'transparent'}
+  />
+      <Button mode="contained" onPress={()=>addPtoduct()}>
+        Create
       </Button>
  
-      
+      <Text onPress={()=>{changeView("home")}}>You changed your mind go back ....</Text>
     </View>
   );
 }
-
 export default Create;

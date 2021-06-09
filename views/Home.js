@@ -5,11 +5,13 @@ import { Card, Button } from "react-native-paper";
 // import Menu from "./Menu.js"
 export default function App({ data,changeView }) {
   console.log("data", data);
+  var e
   return (
     <View style={styles.container}>
       <Text>Note</Text>
-      {data.map((element) => (
-        <Card>
+      {data.map((element,i) => (
+        <Card key={i}>
+           
             <Image
             style={styles.tinyLogo}
               source={{
@@ -18,12 +20,15 @@ export default function App({ data,changeView }) {
             ></Image>
           <Text>{element.note}</Text>
           <Card.Actions>
-            <Button onPress={() => console.log("yessssss")}>Update</Button>
+            <Button onPress={() => changeView('update',element)
+        
+        }>Update</Button>
             <Button>Delete</Button>
           </Card.Actions>
+          <Text onPress={() =>changeView("create",element)}>Click to Create note</Text>
         </Card>
       ))}
-      <Text onPress={() =>changeView("create")}>Click to Create note</Text>
+      
 
     </View>
   );

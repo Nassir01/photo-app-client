@@ -23,7 +23,7 @@ const titleConfig = {
 const alert = () => {
   alert("cliked");
 };
-function Signup({changeView}) {
+function Signup({changeView,url}) {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
